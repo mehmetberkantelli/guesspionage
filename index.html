@@ -824,13 +824,7 @@ async function nextQuestion() {
 
 function showScores(room) {
   const arr = Object.values(room.players).sort((a,b)=>b.score-a.score);
-  document.getElementById('scoreboard').innerHTML = arr.map((p,i)=>`
-    <div class="score-row">
-      <div class="rank ${i===0?'first'}">${i+1}</div>
-      <div class="avatar" style="background:${p.color}22;color:${p.color};width:34px;height:34px;font-size:13px;">${p.name[0].toUpperCase()}</div>
-      <div class="score-name">${p.name}${i===0?' 🏆':''}</div>
-      <div class="score-pts-big">${Math.round(p.score||0)}</div>
-    </div>`).join('');
+  document.getElementById('scoreboard').innerHTML = arr.map((p,i)=>{ const rankClass = i===0?'rank first':'rank'; const trophy = i===0?' 🏆':''; return '<div class="score-row"><div class="'+rankClass+'">'+( i+1)+'</div><div class="avatar" style="background:'+p.color+'22;color:'+p.color+';width:34px;height:34px;font-size:13px;">'+p.name[0].toUpperCase()+'</div><div class="score-name">'+p.name+trophy+'</div><div class="score-pts-big">'+Math.round(p.score||0)+'</div></div>'; }).join('');
 
   document.getElementById('btn-again').style.display = G.isHost ? '' : 'none';
   document.getElementById('scores-status').textContent = G.isHost ? '' : 'Host yeni oyun başlatabilir';
