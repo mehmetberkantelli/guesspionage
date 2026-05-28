@@ -199,11 +199,31 @@ document.getElementById('btn-start').disabled=true;showScreen('screen-loading');
 try{const qs=await fetchQuestions();const room=await getRoom();room.phase='question';room.questions=qs;room.currentQ=0;room.answers={};await saveRoom(room);G.questions=qs;G.currentQ=0;G.submitted=false;showQuestion(0)}
 catch(e){document.getElementById('loading-msg').textContent='Hata: '+e.message}
 }
-async function fetchQuestions(){
-const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Guesspionage tarzı Türkçe parti oyunu için 5 soru üret. Format: "Türklerin kaçta kaçı [bir şey] yapar?" Konular: 18+ yetişkin, komik, sosyal, ilişkiler, gizli alışkanlıklar. Sadece JSON array döndür:\n[{"q":"Türklerin kaçta kaçı...","answer":45},...]'}]})});
-const d=await resp.json();
-const txt=d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
-try{return JSON.parse(txt)}catch(e){console.log('Parse error:',txt);throw new Error('Soru parse hatası: '+txt.slice(0,100))}
+function fetchQuestions(){
+const all=[
+{q:"Türklerin kaçta kaçı tuvalette telefona bakıyor?",answer:78},
+{q:"Türklerin kaçta kaçı yemek yerken TV izliyor?",answer:65},
+{q:"Türklerin kaçta kaçı hiç sigara içmemiştir?",answer:42},
+{q:"Türklerin kaçta kaçı ilk öpücüğünü 18 yaşından önce yaşadı?",answer:61},
+{q:"Türklerin kaçta kaçı sosyal medyada olmadığı yerleri check-in yapıyor?",answer:34},
+{q:"Türklerin kaçta kaçı eski sevgilisinin profilini hala takip ediyor?",answer:54},
+{q:"Türklerin kaçta kaçı duş alırken şarkı söylüyor?",answer:71},
+{q:"Türklerin kaçta kaçı yatmadan önce telefona 30 dakikadan fazla bakıyor?",answer:82},
+{q:"Türklerin kaçta kaçı hiç evlenmek istemediğini düşündü?",answer:28},
+{q:"Türklerin kaçta kaçı arkadaşına söylemediği bir sırrı var?",answer:88},
+{q:"Türklerin kaçta kaçı iş yerinde sıkılırken sosyal medyaya giriyor?",answer:74},
+{q:"Türklerin kaçta kaçı sevgilisinin telefonuna bakmak istedi?",answer:67},
+{q:"Türklerin kaçta kaçı yabancıyla flört etti ama bir şey olmadı?",answer:45},
+{q:"Türklerin kaçta kaçı arkadaşını kıskandı ama belli etmedi?",answer:72},
+{q:"Türklerin kaçta kaçı hiç alkol içmemiştir?",answer:38},
+{q:"Türklerin kaçta kaçı ilişkisinde partner seçerken parayı önemsiyor?",answer:51},
+{q:"Türklerin kaçta kaçı hayatında en az bir kez diyet yaptı?",answer:69},
+{q:"Türklerin kaçta kaçı sabah kalkmakta zorlanıyor?",answer:85},
+{q:"Türklerin kaçta kaçı ailesine gerçek maaşını söylemiyor?",answer:43},
+{q:"Türklerin kaçta kaçı gece 12'den sonra uyuyor?",answer:58}
+];
+const shuffled=all.sort(()=>Math.random()-0.5);
+return Promise.resolve(shuffled.slice(0,5));
 }
 function showQuestion(idx){
 G.submitted=false;const q=G.questions[idx];const total=G.questions.length;
