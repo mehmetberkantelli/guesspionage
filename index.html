@@ -203,7 +203,7 @@ async function fetchQuestions(){
 const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Guesspionage tarzı Türkçe parti oyunu için 5 soru üret. Format: "Türklerin kaçta kaçı [bir şey] yapar?" Konular: 18+ yetişkin, komik, sosyal, ilişkiler, gizli alışkanlıklar. Sadece JSON array döndür:\n[{"q":"Türklerin kaçta kaçı...","answer":45},...]'}]})});
 const d=await resp.json();
 const txt=d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
-return JSON.parse(txt)
+try{return JSON.parse(txt)}catch(e){console.log('Parse error:',txt);throw new Error('Soru parse hatası: '+txt.slice(0,100))}
 }
 function showQuestion(idx){
 G.submitted=false;const q=G.questions[idx];const total=G.questions.length;
